@@ -8,6 +8,11 @@ export async function GET() {
             return NextResponse.json({ error: 'Callback URL not configured' }, { status: 500 });
         }
 
+        if (!twitterClient) {
+            console.error('Twitter Client not initialized. Check TWITTER_API_KEY and TWITTER_API_SECRET.');
+            return NextResponse.json({ error: 'Twitter authentication service unavailable' }, { status: 500 });
+        }
+
         const { url, oauth_token, oauth_token_secret } = await twitterClient.generateAuthLink(callbackUrl, { authAccessType: 'write' });
 
         // In a real app, you'd save oauth_token_secret in a session or cookie

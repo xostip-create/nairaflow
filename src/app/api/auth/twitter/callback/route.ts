@@ -23,6 +23,11 @@ export async function GET(request: NextRequest) {
 
         const { client: loggedClient, accessToken, accessSecret, screenName, userId } = await client.login(oauth_verifier);
 
+        if (!db) {
+            console.error('Firestore Database not initialized. Please check your environment variables.');
+            return NextResponse.json({ error: 'Database initialization failed' }, { status: 500 });
+        }
+
         // Save to Firestore
         await db.collection('pool_accounts').doc(userId).set({
             userId,
